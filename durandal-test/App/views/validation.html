@@ -1,0 +1,8 @@
+﻿<div>
+    <div data-bind="with: model">
+        <input type="text" data-bind="value: FirstName" />
+        <input type="text" data-bind="value: LastName" />
+    </div>
+    <span data-bind="text: validationModel.errors().length" />
+    <button data-bind="click: submit">Submit</button>
+</div>
