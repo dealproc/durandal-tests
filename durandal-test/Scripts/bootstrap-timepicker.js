@@ -39,8 +39,8 @@
         _init: function () {
             var self = this;
 
-            if (this.showWidgetOnAddonClick && (this.$element.parent().hasClass('input-append') || this.$element.parent().hasClass('input-prepend'))) {
-                this.$element.parent('.input-append, .input-prepend').find('.add-on').on({
+            if (this.showWidgetOnAddonClick && (this.$element.parent().hasClass('input-group') || this.$element.parent().hasClass('input-prepend'))) {
+                this.$element.parent('.input-group, .input-prepend').find('.input-group-addon').on({
                     'click.timepicker': $.proxy(this.showWidget, this)
                 });
                 this.$element.on({
@@ -242,10 +242,10 @@
               templateContent;
 
             if (this.showInputs) {
-                hourTemplate = '<input type="text" class="bootstrap-timepicker-hour" maxlength="2"/>';
-                minuteTemplate = '<input type="text" class="bootstrap-timepicker-minute" maxlength="2"/>';
-                secondTemplate = '<input type="text" class="bootstrap-timepicker-second" maxlength="2"/>';
-                meridianTemplate = '<input type="text" class="bootstrap-timepicker-meridian" maxlength="2"/>';
+                hourTemplate = '<input type="text" data-name="hour" class="bootstrap-timepicker-hour form-control" maxlength="2"/>';
+                minuteTemplate = '<input type="text" data-name="minute" class="bootstrap-timepicker-minute form-control" maxlength="2"/>';
+                secondTemplate = '<input type="text" data-name="second" class="bootstrap-timepicker-second form-control" maxlength="2"/>';
+                meridianTemplate = '<input type="text" data-name="meridian" class="bootstrap-timepicker-meridian form-control" maxlength="2"/>';
             } else {
                 hourTemplate = '<span class="bootstrap-timepicker-hour"></span>';
                 minuteTemplate = '<span class="bootstrap-timepicker-minute"></span>';
@@ -255,16 +255,16 @@
 
             templateContent = '<table>' +
                '<tr>' +
-                 '<td><a href="#" data-action="incrementHour"><i class="icon-chevron-up"></i></a></td>' +
+                 '<td><a href="#" data-action="incrementHour"><i class="glyphicon glyphicon-chevron-up"></i></a></td>' +
                  '<td class="separator">&nbsp;</td>' +
-                 '<td><a href="#" data-action="incrementMinute"><i class="icon-chevron-up"></i></a></td>' +
+                 '<td><a href="#" data-action="incrementMinute"><i class="glyphicon glyphicon-chevron-up"></i></a></td>' +
                  (this.showSeconds ?
                    '<td class="separator">&nbsp;</td>' +
-                   '<td><a href="#" data-action="incrementSecond"><i class="icon-chevron-up"></i></a></td>'
+                   '<td><a href="#" data-action="incrementSecond"><i class="glyphicon glyphicon-chevron-up"></i></a></td>'
                  : '') +
                  (this.showMeridian ?
                    '<td class="separator">&nbsp;</td>' +
-                   '<td class="meridian-column"><a href="#" data-action="toggleMeridian"><i class="icon-chevron-up"></i></a></td>'
+                   '<td class="meridian-column"><a href="#" data-action="toggleMeridian"><i class="glyphicon glyphicon-chevron-up"></i></a></td>'
                  : '') +
                '</tr>' +
                '<tr>' +
@@ -281,16 +281,16 @@
                  : '') +
                '</tr>' +
                '<tr>' +
-                 '<td><a href="#" data-action="decrementHour"><i class="icon-chevron-down"></i></a></td>' +
+                 '<td><a href="#" data-action="decrementHour"><i class="glyphicon glyphicon-chevron-down"></i></a></td>' +
                  '<td class="separator"></td>' +
-                 '<td><a href="#" data-action="decrementMinute"><i class="icon-chevron-down"></i></a></td>' +
+                 '<td><a href="#" data-action="decrementMinute"><i class="glyphicon glyphicon-chevron-down"></i></a></td>' +
                  (this.showSeconds ?
                   '<td class="separator">&nbsp;</td>' +
-                  '<td><a href="#" data-action="decrementSecond"><i class="icon-chevron-down"></i></a></td>'
+                  '<td><a href="#" data-action="decrementSecond"><i class="glyphicon glyphicon-chevron-down"></i></a></td>'
                  : '') +
                  (this.showMeridian ?
                   '<td class="separator">&nbsp;</td>' +
-                  '<td><a href="#" data-action="toggleMeridian"><i class="icon-chevron-down"></i></a></td>'
+                  '<td><a href="#" data-action="toggleMeridian"><i class="glyphicon glyphicon-chevron-down"></i></a></td>'
                  : '') +
                '</tr>' +
              '</table>';
@@ -997,7 +997,7 @@
 
         widgetKeydown: function (e) {
             var $input = $(e.target),
-                name = $input.attr('class').replace('bootstrap-timepicker-', '');
+                name = $input.data('name');
 
             switch (e.keyCode) {
                 case 9: //tab
@@ -1050,7 +1050,7 @@
         },
 
         widgetKeyup: function (e) {
-            if ((e.keyCode === 65) || (e.keyCode === 77) || (e.keyCode === 80) || (e.keyCode === 46) || (e.keyCode === 8) || (e.keyCode >= 46 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)) {
+            if ((e.keyCode === 65) || (e.keyCode === 77) || (e.keyCode === 80) || (e.keyCode === 46) || (e.keyCode === 8) || (e.keyCode >= 46 && e.keyCode <= 57)) {
                 this.updateFromWidgetInputs();
             }
         }

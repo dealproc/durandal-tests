@@ -41,83 +41,48 @@
                 }
             }
         };
-
+        // binding from: https://github.com/hugozap/knockoutjs-date-bindings/blob/master/src/ko.dateBindings.js
         ko.bindingHandlers.timepicker = {
             init: function (element, valueAccessor, allBindingsAccessor) {
-                //initialize timepicker with some optional options
-                var options = allBindingsAccessor().timepickerOptions || {},
-                    input = $(element).timepicker(options);
-
-                //handle the field changing
-                ko.utils.registerEventHandler(element, "time-change", function (event, time) {
-                    var observable = valueAccessor(),
-                        current = ko.utils.unwrapObservable(observable);
-
-                    if (current - time !== 0) {
-                        observable(time);
-                    }
-                });
-
-                //handle disposal (if KO removes by the template binding)
-                ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-                    $(element).timepicker("destroy");
-                });
-            },
-
-            update: function (element, valueAccessor) {
-                var value = ko.utils.unwrapObservable(valueAccessor()),
-                    // calling timepicker() on an element already initialized will
-                    // return a TimePicker object
-                    instance = $(element).timepicker();
-
-                if (value !== null && value !== undefined) {
-                    if (value - instance.getTime() !== 0) {
-                        instance.setTime(value);
-                    }
-                } else {
-                    instance.clear();
+                var value = valueAccessor(),
+                    allBindings = allBindingsAccessor(),
+                    $element = $(element),
+                    valueUnwrapped = ko.utils.unwrapObservable(value);
+            
+                if (valueUnwrapped === null || valueUnwrapped === undefined) {
+                    valueUnwrapped = "04:00 AM";
                 }
+                var pattern = allBindings.timePattern || "hh:mm A";
+            
+                var formattedText = moment(valueUnwrapped).format(pattern);
+            
+                var $timepicker = $(element).timepicker({
+                    showInputs: false,
+                    minuteStep: 5,
+                    disableFocus: true
+                });
+            
+                if (valueUnwrapped !== null && valueUnwrapped !== undefined) {
+                    $timepicker.timepicker("setTime", formattedText);
+                }
+            
+                var updateTripped = false;
+                var valueUpdateHandler = function (e) {
+                    var currentTime = $timepicker.timepicker("getTime");
+                    if (e.time.value !== currentTime) {
+                        ko.expressionRewriting.writeValueToProperty(value, allBindings, 'value', e.time.value);
+                    }
+                };
+            
+                ko.utils.registerEventHandler($element, "changeTime.timepicker", valueUpdateHandler);
+            },
+            update: function (element, valueAccessor, allBindingsAccessor) {
+                var value = valueAccessor(),
+                    allBindings = allBindingsAccessor();
+            
+                var valueUnwrapped = ko.utils.unwrapObservable(value);
+                $(element).timepicker("setTime", valueUnwrapped);
             }
-            //init: function (element, valueAccessor, allBindingsAccessor) {
-            //    var value = valueAccessor(),
-            //        allBindings = allBindingsAccessor(),
-            //        $element = $(element),
-            //        valueUnwrapped = ko.utils.unwrapObservable(value);
-            //
-            //    if (valueUnwrapped === null || valueUnwrapped === undefined) {
-            //        valueUnwrapped = "04:00 AM";
-            //    }
-            //    var pattern = allBindings.timePattern || "hh:mm A";
-            //
-            //    var formattedText = moment(valueUnwrapped).format(pattern);
-            //
-            //    var $timepicker = $(element).timepicker({
-            //        showInputs: false,
-            //        minuteStep: 5,
-            //        disableFocus: true
-            //    });
-            //
-            //    if (valueUnwrapped !== null && valueUnwrapped !== undefined) {
-            //        $timepicker.timepicker("setTime", formattedText);
-            //    }
-            //
-            //    var updateTripped = false;
-            //    var valueUpdateHandler = function (e) {
-            //        var currentTime = $timepicker.timepicker("getTime");
-            //        if (e.time.value !== currentTime) {
-            //            ko.expressionRewriting.writeValueToProperty(value, allBindings, 'value', e.time.value);
-            //        }
-            //    };
-            //
-            //    ko.utils.registerEventHandler($element, "changeTime.timepicker", valueUpdateHandler);
-            //},
-            //update: function (element, valueAccessor, allBindingsAccessor) {
-            //    var value = valueAccessor(),
-            //        allBindings = allBindingsAccessor();
-            //
-            //    var valueUnwrapped = ko.utils.unwrapObservable(value);
-            //    $(element).timepicker("setTime", valueUnwrapped);
-            //}
         };
 
     };

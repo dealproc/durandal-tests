@@ -14,7 +14,8 @@ namespace durandal_test {
             .Include("~/Scripts/bootstrap-timepicker.js")
             .Include("~/Scripts/knockout-{version}.js")
             .Include("~/Scripts/knockout.validation.js")
-		);
+            .Include("~/Scripts/moment-with-locales.js")
+        );
 
       bundles.Add(
         new StyleBundle("~/Content/css")
