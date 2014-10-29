@@ -46,14 +46,15 @@
             init: function (element, valueAccessor, allBindingsAccessor) {
                 var value = valueAccessor(),
                     allBindings = allBindingsAccessor(),
-                    $element = $(element);
+                    $element = $(element),
+                    unwrappedValue = ko.utils.unwrapObservable(value);
 
-                if (value === null || value === undefined) {
-                    value = "04:00 AM";
+                if (unwrappedValue === null || unwrappedValue === undefined) {
+                    unwrappedValue = "04:00 AM";
                 }
                 var pattern = allBindings.timePattern || "hh:mm A";
 
-                var formattedText = moment(value).format(pattern);
+                var formattedText = moment(unwrappedValue).format(pattern);
 
                 var $timepicker = $(element).timepicker({
                     showInputs: false,
@@ -61,7 +62,7 @@
                     disableFocus: true
                 });
 
-                if (value !== null && value !== undefined) {
+                if (unwrappedValue !== null && unwrappedValue !== undefined) {
                     $timepicker.timepicker("setTime", formattedText);
                 }
 
