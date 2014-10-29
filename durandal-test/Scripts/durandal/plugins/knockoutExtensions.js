@@ -76,10 +76,11 @@
 
                 ko.utils.registerEventHandler($element, "changeTime.timepicker", valueUpdateHandler);
 
-                //handle disposal (if KO removes by the template binding)
-                ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-                    $(element).timepicker("destroy");
-                });
+                // Commented out because not sure if this is necessary.
+                ////handle disposal (if KO removes by the template binding)
+                //ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                //    $(element).timepicker("destroy");
+                //});
 
                 $timepicker.timepicker("update");
             },
