@@ -1,20 +1,23 @@
 ﻿define(["durandal/app", "plugins/observable"], function (app, observable) {
     var pg = function () { };
 
-    pg.prototype.activate = function () {
+    pg.prototype.canActivate = function () {
         this.model = {
             FirstName: 'Jim',
             LastName: 'Thorpe'
         };
 
-        observable(this.model, "FirstName").extend({ required: true });
-        observable(this.model, "LastName").extend({ required: true });
+        return true;
+    };
 
-        this.validationModel = ko.validatedObservable({ p1: this.model });
+    pg.prototype.activate = function () {
+        this.validationModel = ko.validatedObservable({
+            p1: observable(this.model, "FirstName").extend({ required: true }),
+            p2: observable(this.model, "LastName").extend({ required: true })
+        });
     };
 
     pg.prototype.submit = function () {
-        this.validationModel.errors.showAllMessages();
         alert(this.validationModel.isValid());
     };
 
