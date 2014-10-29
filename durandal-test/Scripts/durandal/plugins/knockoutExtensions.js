@@ -46,26 +46,25 @@
             init: function (element, valueAccessor, allBindingsAccessor) {
                 var value = valueAccessor(),
                     allBindings = allBindingsAccessor(),
-                    $element = $(element),
-                    valueUnwrapped = ko.utils.unwrapObservable(value);
-            
-                if (valueUnwrapped === null || valueUnwrapped === undefined) {
-                    valueUnwrapped = "04:00 AM";
+                    $element = $(element);
+
+                if (value === null || value === undefined) {
+                    value = "04:00 AM";
                 }
                 var pattern = allBindings.timePattern || "hh:mm A";
-            
-                var formattedText = moment(valueUnwrapped).format(pattern);
-            
+
+                var formattedText = moment(value).format(pattern);
+
                 var $timepicker = $(element).timepicker({
                     showInputs: false,
                     minuteStep: 5,
                     disableFocus: true
                 });
-            
-                if (valueUnwrapped !== null && valueUnwrapped !== undefined) {
+
+                if (value !== null && value !== undefined) {
                     $timepicker.timepicker("setTime", formattedText);
                 }
-            
+
                 var updateTripped = false;
                 var valueUpdateHandler = function (e) {
                     var currentTime = $timepicker.timepicker("getTime");
@@ -73,20 +72,18 @@
                         ko.expressionRewriting.writeValueToProperty(value, allBindings, 'value', e.time.value);
                     }
                 };
-            
+
                 ko.utils.registerEventHandler($element, "changeTime.timepicker", valueUpdateHandler);
             },
             update: function (element, valueAccessor, allBindingsAccessor) {
                 var value = valueAccessor(),
                     allBindings = allBindingsAccessor();
-            
-                var valueUnwrapped = ko.utils.unwrapObservable(value);
-                $(element).timepicker("setTime", valueUnwrapped);
+
+                $(element).timepicker("setTime", value);
             }
         };
-
     };
     return {
         install: install
     };
-})
+});
