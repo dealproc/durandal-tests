@@ -75,12 +75,23 @@
                 };
 
                 ko.utils.registerEventHandler($element, "changeTime.timepicker", valueUpdateHandler);
+
+                //handle disposal (if KO removes by the template binding)
+                ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                    $(element).timepicker("destroy");
+                });
+
+                $timepicker.timepicker("update");
             },
             update: function (element, valueAccessor, allBindingsAccessor) {
-                var value = valueAccessor(),
-                    allBindings = allBindingsAccessor();
-
-                $(element).timepicker("setTime", value);
+                //var value = valueAccessor(),
+                //    allBindings = allBindingsAccessor(),
+                //    unwrappedValue = ko.utils.unwrapObservable(value);
+                //
+                //var pattern = allBindings.timePattern || "hh:mm A";
+                //var formattedText = moment(unwrappedValue).format(pattern);
+                //
+                //$(element).timepicker("setTime", formattedText);
             }
         };
     };
