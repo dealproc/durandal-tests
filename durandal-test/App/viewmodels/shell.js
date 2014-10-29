@@ -10,7 +10,8 @@
             router.map([
                 { route: '', title: 'Welcome', moduleId: 'viewmodels/welcome', nav: true },
                 { route: 'flickr', moduleId: 'viewmodels/flickr', nav: true },
-                { route: 'validation', moduleId: 'viewmodels/validation', nav: true}
+                { route: 'validation', moduleId: 'viewmodels/validation', nav: true },
+                { route: 'timepicker', moduleId: 'viewmodels/demo-timepicker', nav: true }
             ]).buildNavigationModel();
 
             return router.activate();

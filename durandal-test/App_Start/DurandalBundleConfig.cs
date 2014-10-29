@@ -11,7 +11,8 @@ namespace durandal_test {
 		new ScriptBundle("~/Scripts/vendor")
 			.Include("~/Scripts/jquery-{version}.js")
 			.Include("~/Scripts/bootstrap.js")
-			.Include("~/Scripts/knockout-{version}.js")
+            .Include("~/Scripts/bootstrap-timepicker.js")
+            .Include("~/Scripts/knockout-{version}.js")
             .Include("~/Scripts/knockout.validation.js")
 		);
 
@@ -20,6 +21,7 @@ namespace durandal_test {
           .Include("~/Content/ie10mobile.css")
           .Include("~/Content/bootstrap.min.css")
           .Include("~/Content/bootstrap-theme.min.css")
+          .Include("~/Content/bootstrap-timepicker.css")
 		  .Include("~/Content/font-awesome.min.css")
 		  .Include("~/Content/durandal.css")
           .Include("~/Content/starterkit.css")

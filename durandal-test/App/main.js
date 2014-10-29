@@ -21,7 +21,8 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator'],  function (s
         router: true,
         dialog: true,
         widget: true,
-        observable: true
+        observable: true,
+        knockoutExtensions: true
     });
 
     ko.validation.init();
