@@ -1,4 +1,4 @@
-﻿define(["knockout"], function (ko) {
+﻿define(["knockout", "plugins/observable"], function (ko, observable) {
     var install = function () {
 
         ko.bindingHandlers.datepicker = {
@@ -43,11 +43,23 @@
         };
         // binding from: https://github.com/hugozap/knockoutjs-date-bindings/blob/master/src/ko.dateBindings.js
         ko.bindingHandlers.timepicker = {
-            init: function (element, valueAccessor, allBindingsAccessor) {
-                var value = valueAccessor(),
+            init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                var options = ko.utils.unwrapObservable(valueAccessor()),
                     allBindings = allBindingsAccessor(),
-                    $element = $(element),
-                    unwrappedValue = ko.utils.unwrapObservable(value);
+                    $element = $(element);
+
+                var propPath = options.property.split(".");
+                var innerModel = viewModel;
+
+                for (var i = 0; i < propPath.length - 1; i++) {
+                    innerModel = innerModel[propPath[i]];
+                }
+
+                var propIdx = propPath.length - 1;
+                if (propIdx < 0) { propIdx = 0; }
+                var obs = observable(innerModel, propPath[propIdx]);
+
+                var unwrappedValue = obs();
 
                 if (unwrappedValue === null || unwrappedValue === undefined) {
                     unwrappedValue = "04:00 AM";
@@ -70,7 +82,7 @@
                 var valueUpdateHandler = function (e) {
                     var currentTime = $timepicker.timepicker("getTime");
                     if (e.time.value !== currentTime) {
-                        ko.expressionRewriting.writeValueToProperty(value, allBindings, 'value', e.time.value);
+                        ko.expressionRewriting.writeValueToProperty(obs, allBindings, 'value', e.time.value);
                     }
                 };
 

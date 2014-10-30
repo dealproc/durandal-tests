@@ -2,7 +2,7 @@
     var pg = function () { };
     pg.prototype.canActivate = function () {
         this.model = {
-            TimeIn: ko.observable(Date.now())
+            TimeIn: Date.now()
         };
         return true;
     };
