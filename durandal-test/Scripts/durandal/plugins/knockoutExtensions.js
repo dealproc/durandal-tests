@@ -1,4 +1,41 @@
 ﻿define(["knockout", "plugins/observable"], function (ko, observable) {
+    var hasAttribute = function (node, attr) {
+        return node.getAttribute(attr) !== null;
+    };
+    var getAttribute = function (element, attr) {
+        return element.getAttribute(attr);
+    };
+    var getObservableFromBindingContext = function (element, bindingContext) {
+        var element = bindingContext.$element || element,
+        viewModel = bindingContext.$data,
+        hasBindAttribute = hasAttribute(element, 'data-bind'),
+        bindAttribute = getAttribute(element, "data-bind");
+
+        findObservable = function (accessor, obj) {
+
+            var boundProperty = accessor.split(":")[1].trim();
+
+            var objects = boundProperty.split(".");
+            var result = obj;
+
+            for (var i = 1, j = objects.length - 1; i < j; i++) {
+                result = result[objects[i]];
+            }
+            return observable(result, objects[objects.length - 1]);
+        }
+
+        if (hasBindAttribute) {
+            var patternsToMatch = Object.keys(ko.bindingHandlers).join("|");
+
+            var pattern = new RegExp("(" + patternsToMatch + ")\:[ \\t]+([A-z_0-9\\-]+)", "g");
+
+            var matchResult = bindAttribute.match(pattern),
+                accessor = matchResult && matchResult.length === 3 ? matchResult[2] : matchResult.length === 2 ? matchResult[1] : matchResult.length === 1 ? matchResult[0] : null;
+
+            return findObservable(accessor, viewModel);
+        }
+        return null;
+    };
     var install = function () {
 
         ko.bindingHandlers.datepicker = {
@@ -44,22 +81,11 @@
         // binding from: https://github.com/hugozap/knockoutjs-date-bindings/blob/master/src/ko.dateBindings.js
         ko.bindingHandlers.timepicker = {
             init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                var options = ko.utils.unwrapObservable(valueAccessor()),
+                var obs = getObservableFromBindingContext(element, bindingContext),
                     allBindings = allBindingsAccessor(),
                     $element = $(element);
 
-                var propPath = options.property.split(".");
-                var innerModel = viewModel;
-
-                for (var i = 0; i < propPath.length - 1; i++) {
-                    innerModel = innerModel[propPath[i]];
-                }
-
-                var propIdx = propPath.length - 1;
-                if (propIdx < 0) { propIdx = 0; }
-                var obs = observable(innerModel, propPath[propIdx]);
-
-                var unwrappedValue = obs();
+                var unwrappedValue = ko.utils.unwrapObservable(obs);
 
                 if (unwrappedValue === null || unwrappedValue === undefined) {
                     unwrappedValue = "04:00 AM";
