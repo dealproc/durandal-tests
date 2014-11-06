@@ -1,8 +1,10 @@
 ﻿<div>
-    <input type="text" data-bind="value: model.TimeIn" />
-    <div class="input-group bootstrap-timepicker">
-        <input type="text" class="form-control" data-bind="timepicker: { property: 'model.TimeIn' }" />
-        <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+    <div data-bind="with: model">
+        <input type="text" data-bind="value: TimeIn" />
+        <div class="input-group bootstrap-timepicker">
+            <input type="text" class="form-control" data-bind="timepicker: { property: 'TimeIn' }" />
+            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+        </div>
     </div>
     <button data-bind="click: submit">Submit</button>
 </div>
